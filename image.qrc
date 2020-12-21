@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>image/icondesktop_32dp.png</file>
+        <file>image/circle1.png</file>
+        <file>image/min.png</file>
+        <file>image/max.png</file>
+        <file>image/quit.png</file>
+        <file>image/tr.png</file>
+        <file>image/image_normal/add.png</file>
+        <file>image/image_normal/quit2.png</file>
+        <file>image/image_normal/theme.png</file>
+        <file>image/image_hover/add_hover.png</file>
+        <file>image/image_hover/quit2_hover.png</file>
+        <file>image/image_hover/theme_hover.png</file>
+        <file>image/image_normal/setting.png</file>
+        <file>image/image_hover/setting_hover.png</file>
+        <file>image/background/bg1.jpg</file>
+        <file>image/background/bg2.jpg</file>
+        <file>image/background/bg3.jpg</file>
+        <file>image/image_hover/pre_hover.png</file>
+        <file>image/image_normal/pre.png</file>
+        <file>image/image_hover/next_hover.png</file>
+        <file>image/image_normal/next.png</file>
+        <file>image/image_normal/pause.png</file>
+        <file>image/image_hover/pause_hover.png</file>
+        <file>image/image_hover/play_hover.png</file>
+        <file>image/image_normal/play.png</file>
+        <file>image/image_hover/like_hover.png</file>
+        <file>image/image_hover/music_hover.png</file>
+        <file>image/image_normal/like.png</file>
+        <file>image/image_normal/music.png</file>
+        <file>image/image_hover/list_hover.png</file>
+        <file>image/image_hover/play-resently_hover.png</file>
+        <file>image/image_normal/list.png</file>
+        <file>image/image_normal/play-resently.png</file>
+        <file>image/circle_10.png</file>
+        <file>image/image_hover/music-voice_hover.png</file>
+        <file>image/image_normal/music-voice.png</file>
+        <file>image/image_hover/none-music_hover.png</file>
+        <file>image/image_normal/none-music.png</file>
+    </qresource>
+</RCC>

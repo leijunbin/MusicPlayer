@@ -14,7 +14,13 @@
 #include <QScrollBar>//滚动条样式
 #include <QSqlDatabase>//qt sql数据库相关头文件
 #include <QSqlQuery>//qt sql数据库操作相关头文件
+#include <QSqlTableModel>//qt sql数据库模型相关头文件
 #include <QTime>//计时相关函数
 #include <QUrl>//地址查找
+#include <QFile>//文件管理相关
+#include <QProgressDialog>//进度条相关
+#include <QMessageBox>//询问界面相关
+#include <QList>//链表类相关
+#include <cstring>//字符串相关
 
 #endif // HEADERFILE_H

@@ -197,6 +197,152 @@ QString styleSheet_byslef::listWidgetStyle(){
                "}";
 }
 
+QString styleSheet_byslef::RandomStyle(){
+    return "QPushButton"
+       " {"
+       "background-image:url(:/image/image/image_normal/play-random.png);"
+     "   background-repeat:no-repeat;"
+      "  background-position:center center;"
+     "   border:none;"
+
+    "    }"
+
+        "QPushButton:hover{"
+      "  background-repeat:no-repeat;"
+     "   background-position:center center;"
+     "background-image:url(:/image/image/image_hover/play-random_hover.png);"
+
+       " }"
+       " QPushButton:pressed{"
+        "background-repeat:no-repeat;"
+       " background-position:center center;"
+       " background-image:url(:/image/image/image_normal/play-random.png);"
+       "}";
+}
+
+QString styleSheet_byslef::LoopStyle(){
+    return "QPushButton"
+       " {"
+       "background-image:url(:/image/image/image_normal/loop.png);"
+     "   background-repeat:no-repeat;"
+      "  background-position:center center;"
+     "   border:none;"
+
+    "    }"
+
+        "QPushButton:hover{"
+      "  background-repeat:no-repeat;"
+     "   background-position:center center;"
+     "background-image:url(:/image/image/image_hover/loop_hover.png);"
+
+       " }"
+       " QPushButton:pressed{"
+        "background-repeat:no-repeat;"
+       " background-position:center center;"
+       " background-image:url(:/image/image/image_normal/loop.png);"
+         "}";
+}
+
+QString styleSheet_byslef::LoopOneStyle(){
+    return "QPushButton"
+       " {"
+       "background-image:url(:/image/image/image_normal/loop-one.png);"
+     "   background-repeat:no-repeat;"
+      "  background-position:center center;"
+     "   border:none;"
+
+    "    }"
+
+        "QPushButton:hover{"
+      "  background-repeat:no-repeat;"
+     "   background-position:center center;"
+     "background-image:url(:/image/image/image_hover/loop-one_hover.png);"
+
+       " }"
+       " QPushButton:pressed{"
+        "background-repeat:no-repeat;"
+       " background-position:center center;"
+       " background-image:url(:/image/image/image_normal/loop-one.png);"
+         "}";
+}
+
+QString styleSheet_byslef::ButtonStyle(){
+    return "QPushButton{"
+           "width:100px;"
+           "height:32px;"
+           "text-align:center;"
+           "line-height:32px;"
+           "background-color: deepskyblue;"
+           "border-style:solid;"
+           "border-width: 1px;"
+           "border-radius: 6px;"
+           "border-color: deepskyblue;"
+           "font: bold 14px;"
+           "color :white;"
+           "}"
+           "QPushButton:hover{"
+           "background-color: aqua;"
+           "color: white;"
+           "border-color:aqua;"
+           "}"
+           "QPushButton:pressed{"
+      "background-color:  white;"
+           "border-color:white;"
+           "color:deepskyblue;"
+           "}";
+}
+
+QString styleSheet_byslef::ProgressDialogStyle(){
+    return "QProgressBar{border: 1px solid grey;border-radius: 5px;text-align: center;background-color:rgba(255,255,255,150);}"
+           "QProgressBar::chunk{background-color: #CD96CD;width: 10px;margin: 0.5px;}";
+}
+
+QString styleSheet_byslef::LikeMusicStyle(){
+    return "QPushButton"
+       " {"
+       "background-image:url(:/image/image/image_normal/likemusic.png);"
+     "   background-repeat:no-repeat;"
+      "  background-position:center center;"
+     "   border:none;"
+
+    "    }"
+
+        "QPushButton:hover{"
+      "  background-repeat:no-repeat;"
+     "   background-position:center center;"
+     "background-image:url(:/image/image/image_hover/likemusic_hover.png);"
+
+       " }"
+       " QPushButton:pressed{"
+        "background-repeat:no-repeat;"
+       " background-position:center center;"
+       " background-image:url(:/image/image/image_normal/likemusic.png);"
+         "}";
+}
+
+QString styleSheet_byslef::NoLikeMusicStyle(){
+    return "QPushButton"
+       " {"
+       "background-image:url(:/image/image/image_normal/nolikemusic.png);"
+     "   background-repeat:no-repeat;"
+      "  background-position:center center;"
+     "   border:none;"
+
+    "    }"
+
+        "QPushButton:hover{"
+      "  background-repeat:no-repeat;"
+     "   background-position:center center;"
+     "background-image:url(:/image/image/image_hover/nolikemusic_hover.png);"
+
+       " }"
+       " QPushButton:pressed{"
+        "background-repeat:no-repeat;"
+       " background-position:center center;"
+       " background-image:url(:/image/image/image_normal/nolikemusic.png);"
+         "}";
+}
+
 QString styleSheet_byslef::pushButton_12_normalStyle(){
     return "QPushButton"
            "{"

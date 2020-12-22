@@ -46,6 +46,8 @@ private slots:
     void on_pushButton_14_clicked();//我的收藏
     void on_pushButton_15_clicked();//历史记录
     void on_pushButton_17_clicked();//音量按键
+    void on_pushButton_18_clicked();//播放模式
+    void on_pushButton_19_clicked();//添加我的喜欢列表
 
     void on_listWidget_2_doubleClicked(const QModelIndex &index);//双击播放playlist_2本地音乐列表
     void on_listWidget_3_doubleClicked(const QModelIndex &index);//双击播放playlist_3本地音乐列表
@@ -60,7 +62,10 @@ private slots:
     void action2_2_slot();//透明度减5%
     void action3_1_slot();//添加本地音乐
     void action3_2_solt();//添加我的收藏
-
+    void action4_1_solt();//清除本地列表
+    void action4_2_solt();//清除我的喜欢列表
+    void action4_3_solt();//清除我的收藏列表
+    void action4_4_solt();//清除历史记录列表
 
     void updateLabel_3();//更新歌曲详情信息
     void updateDuration(qint64 duration);//更新音乐进度条
@@ -87,7 +92,11 @@ private:
     QAction *action3;//添加音乐
     QAction *action3_1;//添加本地音乐
     QAction *action3_2;//添加我的收藏
-
+    QAction *action4;//清除
+    QAction *action4_1;//清除本地列表
+    QAction *action4_2;//清除我的喜欢列表
+    QAction *action4_3;//清除我的收藏列表
+    QAction *action4_4;//清除历史记录列表
 
     styleSheet_byslef* stylesheet;//设计样式
     musicControl* music;//音乐控制相关
@@ -98,5 +107,7 @@ private:
     QVector<QString> currentFileName;//存储上次浏览地址
 
     void setPlayPauseIcon();//改变播放停止图标
+    void setQProgressDialogLoadingMusic(QProgressDialog *progressdialog,QPushButton *button,int size);//添加音乐进度条
+    void setLikeMusicicon(int falg);//设置是否喜欢图标样式
 };
 #endif // WIDGET_H

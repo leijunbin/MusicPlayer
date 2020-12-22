@@ -38,5 +38,15 @@
         <file>image/image_normal/music-voice.png</file>
         <file>image/image_hover/none-music_hover.png</file>
         <file>image/image_normal/none-music.png</file>
+        <file>image/image_hover/play-random_hover.png</file>
+        <file>image/image_normal/play-random.png</file>
+        <file>image/image_hover/loop_hover.png</file>
+        <file>image/image_hover/loop-one_hover.png</file>
+        <file>image/image_normal/loop-one.png</file>
+        <file>image/image_normal/loop.png</file>
+        <file>image/image_hover/likemusic_hover.png</file>
+        <file>image/image_hover/nolikemusic_hover.png</file>
+        <file>image/image_normal/nolikemusic.png</file>
+        <file>image/image_normal/likemusic.png</file>
     </qresource>
 </RCC>

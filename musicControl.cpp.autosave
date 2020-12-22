@@ -166,7 +166,7 @@ void musicControl::addCollectMusic(QString& path){
     playlist_collectMusic->addMedia(QUrl::fromLocalFile(path));
 }
 
-void musicControl::addLikeMusiic(int currentIndex,int falg){
+void musicControl::addLikeMusic(int currentIndex,int falg){
     QSqlQuery query;
 
     QString name = sqloperator->MusicName(currentIndex,falg);

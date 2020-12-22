@@ -488,12 +488,12 @@ void widget::on_pushButton_19_clicked(){
         tempItem->setText(ui->listWidget_2->item(row)->text());
         tempItem->setToolTip(ui->listWidget_2->item(row)->text());
         ui->listWidget_3->addItem(tempItem);
-        music->addLikeMusiic(row,list);
+        music->addLikeMusic(row,list);
         sqloperator->setMusicFalg(row,1);
     }
     else{
         setLikeMusicicon(0);
-
+        
     }
 }
 

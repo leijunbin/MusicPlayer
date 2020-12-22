@@ -15,7 +15,7 @@ public:
     void clearAllMusic(int falg);//清除音乐相关
     void addLocalMusic(QString& path);//添加本地音乐
     void addCollectMusic(QString& path);//添加我的收藏
-    void addLikeMusiic(int currentIndex,int falg);//添加我的喜欢
+    void addLikeMusic(int currentIndex,int falg);//添加我的喜欢
     void setPlaylist(int falg);//设置播放mediaPlaylist
     void setPlaylistIndex(int currentIndex,int falg);//设置播放曲目
     void setVolume(int value);//设置播放音量

@@ -2,30 +2,11 @@
 #include "headerfile.h"
 
 void musicControl::setSqlIndex(QSqlQuery* query,int &falg){
-    switch(falg){
-        case 1:
-            query->exec(QString("select * from LocalMusic"));
-            break;
-        case 2:
-            query->exec(QString("select * from LikeMusic"));
-            break;
-        case 3:
-            query->exec(QString("select * from CollectMusic"));
-    }
+    query->exec(QString("select * from %1").arg(sqldata[falg]));
 }
 
 QMediaPlaylist* musicControl::setNowPlaylist(int falg){
-    switch (falg){
-        case 1:
-            return playlist_localMusic;
-        case 2:
-            return playlist_likeMusic;
-        case 3:
-            return playlist_collectMusic;
-        case 4:
-            return playlist_historyMusic;
-    }
-    return NULL;
+    return playlist[falg];
 }
 
 int musicControl::getPlayBackMode(QMediaPlaylist* temp){
@@ -43,6 +24,12 @@ musicControl::musicControl(){
     playlist_historyMusic = new QMediaPlaylist;
 
     sqloperator = new sqlOperator;
+
+    playlist[0] = NULL;
+    playlist[1] = playlist_localMusic;
+    playlist[2] = playlist_likeMusic;
+    playlist[3] = playlist_collectMusic;
+    playlist[4] = playlist_historyMusic;
 }
 
 QString musicControl::normalizeTime(qint64 time){
@@ -131,39 +118,26 @@ int musicControl::musicLastNext(int dir){
 }
 
 void musicControl::clearAllMusic(int falg){
-    QSqlQuery query;
-    setSqlIndex(&query,falg);
-    if(falg==1)
-        query.exec("delete from LocalMusic");
-    else if(falg==2)
-        query.exec("delete from LikeMusic");
-    else if(falg==3)
-        query.exec("delete from CollectMusic");
+    if(falg>0&&falg<4){
+        QSqlQuery query;
+        setSqlIndex(&query,falg);
+        query.exec(QString("delete from %1").arg(sqldata[falg]));
+    }
     setNowPlaylist(falg)->clear();
+    if(falg == 4)
+        music_historyCount = 0;
 }
 
-void musicControl::addLocalMusic(QString& path){
+void musicControl::addLCMusic(QString& path,int falg){
     QSqlQuery query;
     QString file1 = path.split("\\").last();
     QString name = file1.remove(".mp3");
 
     int id = qrand()%100000;
 
-    query.exec("select * form LocalMusic");
-    query.exec(QString("insert into LocalMusic values (%1,'%2','%3',%4)").arg(id).arg(name).arg(path).arg(0));
-    playlist_localMusic->addMedia(QUrl::fromLocalFile(path));
-}
-
-void musicControl::addCollectMusic(QString& path){
-    QSqlQuery query;
-    QString file1 = path.split("\\").last();
-    QString name = file1.remove(".mp3");
-
-    int id = qrand()%100000;
-
-    query.exec("select * form CollectMusic");
-    query.exec(QString("insert into CollectMusic values (%1,'%2','%3',%4)").arg(id).arg(name).arg(path).arg(0));
-    playlist_collectMusic->addMedia(QUrl::fromLocalFile(path));
+    query.exec(QString("select * form %1").arg(sqldata[falg]));
+    query.exec(QString("insert into %5 values (%1,'%2','%3',%4)").arg(id).arg(name).arg(path).arg(0).arg(sqldata[falg]));
+    setNowPlaylist(falg)->addMedia(QUrl::fromLocalFile(path));
 }
 
 void musicControl::addLikeMusic(int currentIndex,int falg){
@@ -179,11 +153,37 @@ void musicControl::addLikeMusic(int currentIndex,int falg){
     playlist_likeMusic->addMedia(QUrl::fromLocalFile(path));
 }
 
+void musicControl::addHistoryMusic(int currentIndex,int falg){
+    QString path = sqloperator->MusicData(currentIndex,falg);
+
+    playlist_historyMusic->addMedia(QUrl::fromLocalFile(path));
+    music_historyCount++;
+}
+
+void musicControl::deleteMusic(int currentIndex, int falg){
+    QSqlQuery query;
+
+    setSqlIndex(&query,falg);
+
+    int temp=0;
+    while(temp<currentIndex){
+        query.next();
+        temp++;
+    }
+
+    int id = query.value(0).toInt();
+
+    query.exec(QString("delete from %1 where id = %2").arg(sqldata[falg]).arg(id));
+
+    setNowPlaylist(falg)->removeMedia(currentIndex);
+}
+
 void musicControl::setPlaylist(int falg){
     music->setPlaylist(setNowPlaylist(falg));
 }
 
 void musicControl::setPlaylistIndex(int currentIndex,int falg){
+    music->stop();
     setNowPlaylist(falg)->setCurrentIndex(currentIndex);
 }
 
@@ -222,7 +222,7 @@ int musicControl::getMusicCurrentIndex(){
 }
 
 const QMediaPlayer* musicControl::getMusicProgress()const{
-   return music;
+    return music;
 }
 
 QMediaPlaylist* musicControl::getMusicProgressList(int falg){
@@ -236,13 +236,3 @@ int musicControl::getMusicCount(int falg){
         return -1;
 }
 
-QString musicControl::getMusicName(int falg, int &currentIndex){
-    QSqlQuery query;
-    setSqlIndex(&query,falg);
-    QString info;
-    for(int i = 0;i < currentIndex + 1;i++){
-        query.next();
-    }
-    info = query.value(1).toString();
-    return info;
-}

@@ -14,6 +14,9 @@ public:
     QString NoVoiceStyle();//音乐无音量样式
     QString listWidgetStyle();//滚动条样式
 
+    QString HideListStyle();//隐藏按键按钮样式
+    QString ShowListStyle();//显示按键按钮样式
+
     QString RandomStyle();//随机循环样式
     QString LoopStyle();//顺序循环样式
     QString LoopOneStyle();//单曲循环样式

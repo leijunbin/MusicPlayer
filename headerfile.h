@@ -1,6 +1,7 @@
 #ifndef HEADERFILE_H
 #define HEADERFILE_H
 
+#include <vector>
 #include <QWidget>
 #include <QApplication>
 #include <QMouseEvent>//鼠标点击事件

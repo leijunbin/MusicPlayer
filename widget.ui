@@ -1078,7 +1078,7 @@ background-position:center center;
 </string>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -1186,7 +1186,7 @@ background-position:center center;
    <widget class="QPushButton" name="pushButton_18">
     <property name="geometry">
      <rect>
-      <x>1024</x>
+      <x>1035</x>
       <y>648</y>
       <width>32</width>
       <height>32</height>
@@ -1243,6 +1243,84 @@ background-position:center center;
 
 }
 QPushButton:pressed{
+background-repeat:no-repeat;
+background-position:center center;
+
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_20">
+    <property name="geometry">
+     <rect>
+      <x>1095</x>
+      <y>648</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+background-image: url(:/image/image/image_normal/position.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+background-image: url(:/image/image/image_hover/position_hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-image: url(:/image/image/image_normal/position.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_21">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>20</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+background-image: url(:/image/image/image_normal/sereach.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+
+
+background-image: url(:/image/image/image_hover/sereach_hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-image: url(:/image/image/image_normal/sereach.png);
 background-repeat:no-repeat;
 background-position:center center;
 

@@ -46,6 +46,28 @@ void widget::setLikeMusicicon(int falg){
     }
 }
 
+void widget::addHistoryMusic(){
+    int current = music->getMusicCurrentIndex();
+    int list = music->getMusicList();
+
+    QString fileName = sqloperator->MusicName(current,list);
+
+    int count = music->music_historyCount;
+    for(int i = 0;i < count;i++){
+        QString name = ui->listWidget_5->item(i)->text();
+        if(fileName==name){
+            return;
+        }
+    }
+
+    music->addHistoryMusic(current,list);
+
+    QListWidgetItem *item = new QListWidgetItem;
+    item->setText(fileName);
+    item->setToolTip(fileName);
+    ui->listWidget_5->addItem(item);
+}
+
 widget::widget(QWidget *parent):QWidget(parent),ui(new Ui::widget){
     ui->setupUi(this);
     setAutoFillBackground(true);
@@ -129,8 +151,8 @@ inline void widget::init_else(){
         int musicTotalCount = music->getMusicCount(i);
         for(int j = 0;j < musicTotalCount;j++){
             QListWidgetItem *item = new QListWidgetItem;
-            item->setText(music->getMusicName(i,j));
-            item->setToolTip(music->getMusicName(i,j));
+            item->setText(sqloperator->MusicName(j,i));
+            item->setToolTip(sqloperator->MusicName(j,i));
             switch(i){
                 case 1:
                     ui->listWidget_2->addItem(item);
@@ -154,14 +176,18 @@ inline void widget::init_tooltip(){
     ui->pushButton_5->setToolTip("设置");
     ui->pushButton_6->setToolTip("更换主题");
     ui->pushButton_7->setToolTip("添加本地歌曲");
-    ui->pushButton_8->setToolTip("切换至极简模式/双击");
+    ui->pushButton_8->setToolTip("退出");
     ui->pushButton_9->setToolTip("上一首");
     ui->pushButton_11->setToolTip("下一首");
     ui->pushButton_12->setToolTip("本地音乐");
     ui->pushButton_13->setToolTip("我的喜欢");
     ui->pushButton_14->setToolTip("我的收藏");
     ui->pushButton_15->setToolTip("最近播放");
-    ui->pushButton_16->setToolTip("音量");
+    ui->pushButton_16->setToolTip("隐藏播放列表");
+    ui->pushButton_17->setToolTip("音量");
+    ui->pushButton_18->setToolTip("播放模式");
+    ui->pushButton_19->setToolTip("我的喜欢");
+    ui->pushButton_20->setToolTip("定位");
 
     ui->horizontalSlider->setToolTip("播放进度");
 }//设置指针移动到图标上的文字提示
@@ -180,8 +206,6 @@ inline void widget::init_action(){
     action1_2->setText("动漫");
     action1_3->setText("怀旧");
     action1_4->setText("自定义");
-
-    action1_4->setShortcut(QKeySequence("Ctrl+X"));//设置快捷键
 
     QMenu *ChangeBackGroundMenu = new QMenu(this);//创建主题设置菜单
     ChangeBackGroundMenu->addAction(action1_1);
@@ -203,9 +227,6 @@ inline void widget::init_action(){
     action2_1->setText("+5%");
     action2_2->setText("-5%");
 
-    action2_1->setShortcut(QKeySequence("Ctrl++"));
-    action2_2->setShortcut(QKeySequence("Ctrl+-"));
-
     QMenu *setTransparency = new QMenu(this);
     setTransparency->addAction(action2_1);
     setTransparency->addAction(action2_2);
@@ -223,9 +244,6 @@ inline void widget::init_action(){
     action3_1->setText("添加至本地音乐");
     action3_2->setText("添加至我的收藏");
 
-    action3_1->setShortcut(QKeySequence("Ctrl+Z"));
-    action3_2->setShortcut(QKeySequence("Ctrl+O"));
-
     QMenu *addMusicMenu = new QMenu(this);
     addMusicMenu->addAction(action3_1);
     addMusicMenu->addAction(action3_2);
@@ -234,6 +252,7 @@ inline void widget::init_action(){
 
     ui->pushButton_7->setMenu(addMusicMenu);
 
+    action3->setMenu(addMusicMenu);
     //创建清除菜单
 
     action4 = new QAction(this);
@@ -246,7 +265,7 @@ inline void widget::init_action(){
     action4_1->setText("清除本地音乐列表");
     action4_2->setText("清除喜欢音乐列表");
     action4_3->setText("清除收藏音乐列表");
-    //action4_4->setText("清除历史音乐列表");
+    action4_4->setText("清除历史音乐列表");
 
     QMenu *clearMusic = new QMenu(this);
     clearMusic->addAction(action4_1);
@@ -267,6 +286,22 @@ inline void widget::init_action(){
 
     mainMenu->setStyleSheet(stylesheet->MenuStyle());
     ui->pushButton_5->setMenu(mainMenu);
+
+    //设置右键菜单
+    action5_1 = new QAction;
+    action5_2 = new QAction;
+    action5_3 = new QAction;
+    action5_4 = new QAction;
+    action5_5 = new QAction;
+
+    action6 = new QAction;
+    action6_1 = new QAction;
+    action6_2 = new QAction;
+    action6_3 = new QAction;
+
+    //action7 = new QAction;
+    //action8 = new QAction;
+    //action9 = new QAction;
 }
 
 void widget::init_connect(){
@@ -282,6 +317,17 @@ void widget::init_connect(){
     connect(action4_2,&QAction::triggered,this,&widget::action4_2_solt);//清除我的喜欢列表
     connect(action4_3,&QAction::triggered,this,&widget::action4_3_solt);//清除我的收藏列表
     connect(action4_4,&QAction::triggered,this,&widget::action4_4_solt);//清除历史记录列表
+    connect(action5_1,&QAction::triggered,this,&widget::action5_1_solt);//右键菜单相关
+    connect(action5_2,&QAction::triggered,this,&widget::action5_2_solt);//右键菜单相关
+    connect(action5_3,&QAction::triggered,this,&widget::action5_3_solt);//右键菜单相关
+    connect(action5_4,&QAction::triggered,this,&widget::action5_4_solt);//右键菜单相关
+    connect(action5_5,&QAction::triggered,this,&widget::action5_5_solt);//右键菜单相关
+    connect(action6_1,&QAction::triggered,this,&widget::action6_1_solt);//右键菜单相关
+    connect(action6_2,&QAction::triggered,this,&widget::action6_2_solt);//右键菜单相关
+    connect(action6_3,&QAction::triggered,this,&widget::action6_3_solt);//右键菜单相关
+    //connect(action7,&QAction::triggered,this,&widget::action7_solt);
+    //connect(action8,&QAction::triggered,this,&widget::action8_solt);
+    //connect(action9,&QAction::triggered,this,&widget::action9_solt);
     connect(music->getMusicProgress(),&QMediaPlayer::positionChanged,this,&widget::updatePosition);//更新进度条
     connect(music->getMusicProgress(),&QMediaPlayer::durationChanged,this,&widget::updateDuration);//更新音乐长度
     connect(music->getMusicProgress(),&QMediaPlayer::metaDataAvailableChanged,this,&widget::updateLabel_3);//更新音乐数据
@@ -311,6 +357,9 @@ inline void widget::init_icon(){
         setLikeMusicicon(1);//设置我的喜欢按钮样式
     else
         setLikeMusicicon(0);
+
+    ui->pushButton_16->setStyleSheet(stylesheet->HideListStyle());//隐藏/显示播放列表
+
 }
 
 widget::~widget()
@@ -384,6 +433,10 @@ void widget::on_pushButton_4_clicked(){
     sequentialAnimationGroup->start();//开始动画
 }
 
+void widget::on_pushButton_8_clicked(){
+    on_pushButton_3_clicked();
+}
+
 void widget::on_pushButton_9_clicked(){
     if(ui->listWidget->count()==0&&ui->listWidget_2->count()==0&&ui->listWidget_3->count()==0&&ui->listWidget_4->count()==0&&ui->listWidget_5->count()==0)
         return;
@@ -399,6 +452,7 @@ void widget::on_pushButton_9_clicked(){
         setPlayPauseIcon();
         music->musicPlay();
     }
+    addHistoryMusic();
 }
 
 void widget::on_pushButton_10_clicked(){
@@ -411,6 +465,7 @@ void widget::on_pushButton_10_clicked(){
         setLikeMusicicon(0);
 
     setPlayPauseIcon();
+    addHistoryMusic();
 }
 
 void widget::on_pushButton_11_clicked(){
@@ -428,6 +483,7 @@ void widget::on_pushButton_11_clicked(){
         setPlayPauseIcon();
         music->musicPlay();
     }
+    addHistoryMusic();
 }
 
 void widget::on_pushButton_12_clicked(){
@@ -452,6 +508,87 @@ void widget::on_pushButton_15_clicked(){
     ui->listWidget_5->setSelectionMode(QListWidget::SingleSelection);
     ui->stackedWidget->setCurrentIndex(4);
     pushButtonStyle_3();
+}
+
+void widget::on_pushButton_16_clicked(){
+        QPropertyAnimation *AnimationForPushButton1 = new QPropertyAnimation(ui->pushButton_12,"geometry");
+        QPropertyAnimation *AnimationForPushButton2 = new QPropertyAnimation(ui->pushButton_13,"geometry");
+        QPropertyAnimation *AnimationForPushButton3 = new QPropertyAnimation(ui->pushButton_14,"geometry");
+        QPropertyAnimation *AnimationForPushButton4 = new QPropertyAnimation(ui->pushButton_15,"geometry");
+        QPropertyAnimation *AnimationForPushButton5 = new QPropertyAnimation(ui->pushButton_16,"geometry");
+
+        AnimationForPushButton1->setDuration(200);
+        AnimationForPushButton2->setDuration(200);
+        AnimationForPushButton3->setDuration(200);
+        AnimationForPushButton4->setDuration(200);
+        AnimationForPushButton5->setDuration(300);
+
+
+        QSequentialAnimationGroup *sequentialAnimationGroup = new QSequentialAnimationGroup;
+
+        if(ui->stackedWidget->isHidden()){
+            ui->pushButton_16->setStyleSheet(stylesheet->HideListStyle());
+            ui->pushButton_16->setToolTip(("隐藏播放列表"));
+            ui->stackedWidget->show();
+
+            AnimationForPushButton1->setStartValue(QRect(-32,60,32,32));
+            AnimationForPushButton1->setEndValue(QRect(10,60,32,32));
+            AnimationForPushButton1->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton2->setStartValue(QRect(-32,60,32,32));
+            AnimationForPushButton2->setEndValue(QRect(80,60,32,32));
+            AnimationForPushButton2->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton3->setStartValue(QRect(-32,60,32,32));
+            AnimationForPushButton3->setEndValue(QRect(160,60,32,32));
+            AnimationForPushButton3->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton4->setStartValue(QRect(-32,60,32,32));
+            AnimationForPushButton4->setEndValue(QRect(240,60,32,32));
+            AnimationForPushButton4->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton5->setStartValue(QRect(10,60,32,32));
+            AnimationForPushButton5->setEndValue(QRect(320,60,32,32));
+            AnimationForPushButton5->setEasingCurve(QEasingCurve::InBounce);
+
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton5);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton4);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton3);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton2);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton1);
+        }
+        else{
+            ui->pushButton_16->setToolTip(("显示播放列表"));
+            ui->pushButton_16->setStyleSheet(stylesheet->ShowListStyle());
+            ui->stackedWidget->hide();
+
+            AnimationForPushButton1->setStartValue(QRect(10,60,32,32));
+            AnimationForPushButton1->setEndValue(QRect(-32,60,32,32));
+            AnimationForPushButton1->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton2->setStartValue(QRect(80,60,32,32));
+            AnimationForPushButton2->setEndValue(QRect(-32,60,32,32));
+            AnimationForPushButton2->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton3->setStartValue(QRect(160,60,32,32));
+            AnimationForPushButton3->setEndValue(QRect(-32,60,32,32));
+            AnimationForPushButton3->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton4->setStartValue(QRect(240,60,32,32));
+            AnimationForPushButton4->setEndValue(QRect(-32,60,32,32));
+            AnimationForPushButton4->setEasingCurve(QEasingCurve::InBounce);
+
+            AnimationForPushButton5->setStartValue(QRect(320,60,32,32));
+            AnimationForPushButton5->setEndValue(QRect(10,60,32,32));
+            AnimationForPushButton5->setEasingCurve(QEasingCurve::InBounce);
+
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton1);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton2);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton3);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton4);
+            sequentialAnimationGroup->addAnimation(AnimationForPushButton5);
+        }
+        sequentialAnimationGroup->start();
 }
 
 void widget::on_pushButton_17_clicked(){
@@ -484,17 +621,58 @@ void widget::on_pushButton_19_clicked(){
     int falg = sqloperator->getMusicFalg(row,list);
     if(falg==0){
         setLikeMusicicon(1);
+        QString MusicName;
+        if(list==1)
+            MusicName = ui->listWidget_2->item(row)->text();
+        else if(list==3)
+            MusicName = ui->listWidget_3->item(row)->text();
+        if(!sqloperator->searchMusic(MusicName,2,2).isEmpty())
+            return;
         QListWidgetItem* tempItem = new QListWidgetItem;
-        tempItem->setText(ui->listWidget_2->item(row)->text());
-        tempItem->setToolTip(ui->listWidget_2->item(row)->text());
+        tempItem->setText(MusicName);
+        tempItem->setToolTip(MusicName);
         ui->listWidget_3->addItem(tempItem);
         music->addLikeMusic(row,list);
-        sqloperator->setMusicFalg(row,1);
+        sqloperator->setMusicFalg(row,1,list);
     }
     else{
-        setLikeMusicicon(0);
-
+        if(music->getMusicList()!=2)
+            QMessageBox::information(this,("提示"),("该歌曲已添加."),QMessageBox::Yes);
+        else{
+            setLikeMusicicon(0);
+            sqloperator->setMusicFalg(row,0,list);
+            music->deleteMusic(row,2);
+            QListWidgetItem* tempItem = ui->listWidget_3->item(row);
+            delete tempItem;
+        }
     }
+}
+
+void widget::on_pushButton_20_clicked(){
+    if(ui->listWidget->count()==0&&ui->listWidget_2->count()==0&&ui->listWidget_3->count()==0&&ui->listWidget_4->count()==0&&ui->listWidget_5->count()==0)
+        return;
+    ui->stackedWidget->setCurrentIndex(1);
+    pushButtonStyle();
+    ui->listWidget_2->item(music->getMusicCurrentIndex())->setSelected(true);
+    ui->listWidget_2->scrollToItem(ui->listWidget_2->item(music->getMusicCurrentIndex()));
+}
+
+void widget::on_pushButton_21_clicked(){
+    QString text = ui->lineEdit->text();
+    if(!text.isEmpty()){
+        ui->listWidget->clear();
+        QList<int> result = sqloperator->searchMusic(text,1,1);
+        int size = result.size();
+        for(int i=0;i<size;i++){
+            QString fileName = sqloperator->MusicName(result[i],1);
+            QListWidgetItem *item = new QListWidgetItem;
+            item->setText(fileName);
+            item->setToolTip(fileName);
+            ui->listWidget->addItem(item);
+        }
+    }
+    ui->stackedWidget->setCurrentIndex(0);
+    pushButtonStyle_4();
 }
 
 void widget::on_listWidget_2_doubleClicked(const QModelIndex &index){
@@ -510,6 +688,7 @@ void widget::on_listWidget_2_doubleClicked(const QModelIndex &index){
         setLikeMusicicon(0);
 
     music->musicPlay();
+    addHistoryMusic();
 }
 
 void widget::on_listWidget_3_doubleClicked(const QModelIndex &index){
@@ -525,7 +704,7 @@ void widget::on_listWidget_3_doubleClicked(const QModelIndex &index){
         setLikeMusicicon(0);
 
     music->musicPlay();
-
+    addHistoryMusic();
 }
 
 void widget::on_listWidget_4_doubleClicked(const QModelIndex &index){
@@ -541,6 +720,7 @@ void widget::on_listWidget_4_doubleClicked(const QModelIndex &index){
         setLikeMusicicon(0);
 
     music->musicPlay();
+    addHistoryMusic();
 }
 
 void widget::on_listWidget_5_doubleClicked(const QModelIndex &index){
@@ -628,10 +808,10 @@ void widget::action3_1_slot(){
                 QString file=FileName.split("\\").last();
                 QString file1=file;
                 file=file.remove(".mp3");
-                if(!sqloperator->equalMusic(file,1).isEmpty()){
+                if(!sqloperator->searchMusic(file,1,2).isEmpty()){
                     continue;
                 }
-                music->addLocalMusic(FileName);
+                music->addLCMusic(FileName,1);
                 currentFileName[1]=FileName.remove(file1);
                 QListWidgetItem *item = new QListWidgetItem;
                 item->setText(file);
@@ -669,10 +849,10 @@ void widget::action3_2_solt(){
                 QString file=FileName.split("\\").last();
                 QString file1=file;
                 file=file.remove(".mp3");
-                if(!sqloperator->equalMusic(file,3).isEmpty()){
+                if(!sqloperator->searchMusic(file,3,2).isEmpty()){
                     continue;
                 }
-                music->addCollectMusic(FileName);
+                music->addLCMusic(FileName,3);
                 currentFileName[2]=FileName.remove(file1);
                 QListWidgetItem *item = new QListWidgetItem;
                 item->setText(file);
@@ -700,6 +880,8 @@ void widget::action4_2_solt(){
         music->clearAllMusic(2);
         ui->listWidget_3->clear();
     }
+    sqloperator->clearMusicFalg();
+    setLikeMusicicon(0);
 }
 
 void widget::action4_3_solt(){
@@ -716,6 +898,41 @@ void widget::action4_4_solt(){
         music->clearAllMusic(4);
         ui->listWidget_5->clear();
     }
+}
+
+void widget::action5_1_solt(){
+    on_pushButton_9_clicked();
+}
+
+void widget::action5_2_solt(){
+    on_pushButton_11_clicked();
+}
+
+void widget::action5_3_solt(){
+    on_pushButton_10_clicked();
+}
+
+void widget::action5_4_solt(){
+    on_pushButton_20_clicked();
+}
+
+void widget::action5_5_solt(){
+    on_pushButton_3_clicked();
+}
+
+void widget::action6_1_solt(){
+    ui->pushButton_18->setStyleSheet(stylesheet->LoopStyle());
+    music->setPlaylistMode(1);
+}
+
+void widget::action6_2_solt(){
+    ui->pushButton_18->setStyleSheet(stylesheet->RandomStyle());
+    music->setPlaylistMode(2);
+}
+
+void widget::action6_3_solt(){
+    ui->pushButton_18->setStyleSheet(stylesheet->LoopOneStyle());
+    music->setPlaylistMode(3);
 }
 
 void widget::updateLabel_3(){
@@ -749,7 +966,8 @@ void widget::updateListWidget_4(int value){
 }
 
 void widget::updateListWidget_5(int value){
-
+    if(ui->listWidget_5->selectionMode()==QListWidget::SingleSelection)
+        ui->listWidget_5->item(value)->setSelected(true);
 }
 
 void widget::updateVolume(int value){
@@ -813,5 +1031,44 @@ void widget::mouseReleaseEvent(QMouseEvent *event){
     offset=QPoint();//清空offset数据
     event->accept();//改变点击事件数据在类之间传递性质，一般为ignore
     setCursor(Qt::ArrowCursor);//改变鼠标样式——指针
+}
+
+void widget::contextMenuEvent(QContextMenuEvent *){
+    if(music->musicState()==1)
+        action5_3->setText("暂停");
+    else
+        action5_3->setText("播放");
+    action5_1->setText("上一首");
+    action5_2->setText("下一首");
+    action5_4->setText("定位");
+    action5_5->setText("退出");
+
+    QMenu *setPlaylistMode = new QMenu(this);
+    setPlaylistMode->setStyleSheet(stylesheet->MenuStyle());
+    action6_1->setText("列表循环");
+    action6_2->setText("随机循环");
+    action6_3->setText("单曲循环");
+
+    setPlaylistMode->addAction(action6_1);
+    setPlaylistMode->addAction(action6_2);
+    setPlaylistMode->addAction(action6_3);
+
+    action6->setMenu(setPlaylistMode);
+    action6->setText("播放模式");
+
+    QMenu *menu = new QMenu(this);
+    menu->setStyleSheet(stylesheet->MenuStyle());
+
+    menu->addAction(action3);
+    menu->addAction(action5_1);
+    menu->addAction(action5_2);
+    menu->addAction(action5_3);
+    menu->addAction(action6);
+    menu->addAction(action1);
+    menu->addAction(action4);
+    menu->addAction(action5_4);
+    menu->addAction(action5_5);
+
+    menu->exec(QCursor::pos());
 }
 

@@ -48,5 +48,13 @@
         <file>image/image_hover/nolikemusic_hover.png</file>
         <file>image/image_normal/nolikemusic.png</file>
         <file>image/image_normal/likemusic.png</file>
+        <file>image/image_normal/position.png</file>
+        <file>image/image_hover/position_hover.png</file>
+        <file>image/image_hover/left_hover.png</file>
+        <file>image/image_hover/right_hover.png</file>
+        <file>image/image_normal/left.png</file>
+        <file>image/image_normal/right.png</file>
+        <file>image/image_hover/sereach_hover.png</file>
+        <file>image/image_normal/sereach.png</file>
     </qresource>
 </RCC>
